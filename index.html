@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dropdown Request</title>
+</head>
+
+<body>
+
+    <div>
+        <label for="data">Select an Option</label>
+        <select name="data" id="data">
+            <option value="select">Select</option>
+            <option value="student">Student</option>
+            <option value="store">Store</option>
+        </select> &nbsp;
+        
+        <button id="submit">Submit</button>
+    </div>
+
+    <div id="display"></div>
+
+    <script>
+        let selectdata = document.getElementById("data");
+        let submit = document.getElementById("submit");
+        let display = document.getElementById("display");
+
+
+        submit.addEventListener("click", async (event) => {
+            event.preventDefault();
+
+            const selectedValue = selectdata.value;
+
+            if (selectedValue === "select") {
+                alert("Please choose a valid option.");
+                return;
+            }
+
+            const body = { value: selectedValue };
+
+            const options = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(body),
+            };
+
+            try {
+                const response = await fetch("http://localhost:3002/", options);
+
+                if (!response.ok) {
+                    throw new Error(`Server returned status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log(data);
+
+                display.innerHTML = `<pre>${JSON.stringify(data,null,2)}</pre>`;
+
+
+            } catch (error) {
+                console.error("Error occurred:", error);
+                alert("Failed to fetch data. Check the console for details.");
+            }
+        });
+
+
+
+    </script>
+</body>
+
+</html>
